@@ -60,37 +60,37 @@ export default {
 
 <style>
 .cases {
-  font-size: 1.3em;
+  font-size: 1.1em;
   font-weight: bold;
   color: #335bff;
 }
 .deaths {
-  font-size: 1.3em;
+  font-size: 1.1em;
   font-weight: bold;
   color: #ff0000;
 }
 .recovered {
-  font-size: 1.3em;
+  font-size: 1.1em;
   font-weight: bold;
   color: #349504;
 }
 .active {
-  font-size: 1.3em;
+  font-size: 1.1em;
   font-weight: bold;
   color: #0450a7;
 }
 .critical {
-  font-size: 1.3em;
+  font-size: 1.1em;
   font-weight: bold;
   color: #fd6c08;
 }
 .todaycase {
-  font-size: 1.3em;
+  font-size: 1.1em;
   font-weight: bold;
   color: #000000;
 }
 .todaydeath {
-  font-size: 1.3em;
+  font-size: 1.1em;
   font-weight: bold;
   color: #ff0000;
 }

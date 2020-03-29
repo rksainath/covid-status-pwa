@@ -11,7 +11,6 @@
     </ion-header>
     <ion-content class="ion-padding">
       <CovidSelect v-on:get-country="getCountryStatus" />
-      <CovidSearch v-on:get-country="getCountryStatus" />
       <CovidInfo v-bind:info="info" />
     </ion-content>
     <ion-footer>
@@ -30,12 +29,11 @@
 
 <script>
 import CovidSelect from "../components/CovidSelect";
-import CovidSearch from "../components/CovidSearch";
 import CovidInfo from "../components/CovidInfo";
 
 export default {
   name: "Home",
-  components: { CovidSearch, CovidInfo, CovidSelect },
+  components: { CovidSelect,CovidInfo },
   data() {
     return {
       info: null
