@@ -58,8 +58,8 @@ export default {
     showAlert() {
       return this.$ionic.alertController
         .create({
-          header: "Not Valid",
-          message: "Please enter a valid country name",
+          header: "No Data",
+          message: "Data not available",
           buttons: ["OK"]
         })
         .then(a => a.present());
