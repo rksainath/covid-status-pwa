@@ -1,6 +1,42 @@
 <template>
   <ion-grid>
-    <form @submit="OnSubmit">
+    <div>
+      <ion-toolbar>
+        <!-- :value="country" -->
+        <ion-searchbar
+          ref="srchInput"
+          placeholder="Enter Country Name"
+          @ionChange="cntryChng($event.target.value)"
+        ></ion-searchbar>
+      </ion-toolbar>
+      <ion-card class="listView" v-if="list && list.length > 0">
+        <ion-content class="lviewChild" fullscreen="false">
+          <ion-item
+            class="hvrItem"
+            v-for="cntry in list"
+            v-bind:key="cntry.id"
+            v-on:click="itemClick(cntry.name);"
+          >{{cntry.name}}</ion-item>
+        </ion-content>
+      </ion-card>
+      <div class="cstmRow">
+        <ion-button
+          shape="round"
+          class="cstmBtn"
+          size="default"
+          v-on:click="OnSubmit()"
+          color="primary"
+        >Find</ion-button>
+        <ion-button
+          shape="round"
+          class="cstmBtn"
+          size="default"
+          v-on:click="OnSubmit();"
+          color="medium"
+        >Clear</ion-button>
+      </div>
+    </div>
+    <!-- <form @submit="OnSubmit">
       <ion-select
         :value="country"
         @ionChange="country = $event.target.value"
@@ -210,7 +246,7 @@
         <ion-select-option value="ZWE">Zimbabwe</ion-select-option>
       </ion-select>
       <ion-button type="submit" color="primary" expand="block" round>Find</ion-button>
-    </form>
+    </form>-->
   </ion-grid>
 </template>
 
@@ -219,15 +255,267 @@ export default {
   name: "CovidSelect",
   data() {
     return {
-      country: ""
+      country: "",
+      list: [],
+      srchVal: "",
+      countries: [
+        { key: "AFG", name: "Afghanistan" },
+        { key: "ALB", name: "Albania" },
+        { key: "DZA", name: "Algeria" },
+        { key: "AND", name: "Andorra" },
+        { key: "AGO", name: "Angola" },
+        { key: "AIA", name: "Anguilla" },
+        { key: "ATG", name: "Antigua and Barbuda" },
+        { key: "ARG", name: "Argentina" },
+        { key: "ARM", name: "Armenia" },
+        { key: "ABW", name: "Aruba" },
+        { key: "AUS", name: "Australia" },
+        { key: "AUT", name: "Austria" },
+        { key: "AZE", name: "Azerbaijan" },
+        { key: "BHS", name: "Bahamas" },
+        { key: "BHR", name: "Bahrain" },
+        { key: "BGD", name: "Bangladesh" },
+        { key: "BRB", name: "Barbados" },
+        { key: "BLR", name: "Belarus" },
+        { key: "BEL", name: "Belgium" },
+        { key: "BLZ", name: "Belize" },
+        { key: "BEN", name: "Benin" },
+        { key: "BMU", name: "Bermuda" },
+        { key: "BTN", name: "Bhutan" },
+        { key: "BOL", name: "Bolivia" },
+        { key: "BIH", name: "Bosnia" },
+        { key: "BRA", name: "Brazil" },
+        { key: "VGB", name: "British Virgin Islands" },
+        { key: "BRN", name: "Brunei" },
+        { key: "BGR", name: "Bulgaria" },
+        { key: "BFA", name: "Burkina Faso" },
+        { key: "CPV", name: "Cabo Verde" },
+        { key: "KHM", name: "Cambodia" },
+        { key: "CMR", name: "Cameroon" },
+        { key: "CAN", name: "Canada" },
+        { key: "CYM", name: "Cayman Islands" },
+        { key: "CAF", name: "Central African Republic" },
+        { key: "TCD", name: "Chad" },
+        { key: "JEY", name: "Channel Islands" },
+        { key: "CHL", name: "Chile" },
+        { key: "CHN", name: "China" },
+        { key: "COL", name: "Colombia" },
+        { key: "COG", name: "Congo" },
+        { key: "COD", name: "Congo the Democratic Republic of the" },
+        { key: "CRI", name: "Costa Rica" },
+        { key: "CIV", name: "Côte d'Ivoire" },
+        { key: "HRV", name: "Croatia" },
+        { key: "CUB", name: "Cuba" },
+        { key: "CUW", name: "Curacao" },
+        { key: "CYP", name: "Cyprus" },
+        { key: "CZE", name: "Czechia" },
+        { key: "DNK", name: "Denmark" },
+        { key: "null", name: "Diamond Princess" },
+        { key: "DJI", name: "Djibouti" },
+        { key: "DMA", name: "Dominica" },
+        { key: "DOM", name: "Dominican Republic" },
+        { key: "ECU", name: "Ecuador" },
+        { key: "EGY", name: "Egypt" },
+        { key: "SLV", name: "El Salvador" },
+        { key: "GNQ", name: "Equatorial Guinea" },
+        { key: "ERI", name: "Eritrea" },
+        { key: "EST", name: "Estonia" },
+        { key: "ETH", name: "Ethiopia" },
+        { key: "FRO", name: "Faroe Islands" },
+        { key: "FJI", name: "Fiji" },
+        { key: "FIN", name: "Finland" },
+        { key: "FRA", name: "France" },
+        { key: "GUF", name: "French Guiana" },
+        { key: "PYF", name: "French Polynesia" },
+        { key: "GAB", name: "Gabon" },
+        { key: "GMB", name: "Gambia" },
+        { key: "GEO", name: "Georgia" },
+        { key: "DEU", name: "Germany" },
+        { key: "GHA", name: "Ghana" },
+        { key: "GIB", name: "Gibraltar" },
+        { key: "GRC", name: "Greece" },
+        { key: "GRL", name: "Greenland" },
+        { key: "GRD", name: "Grenada" },
+        { key: "GLP", name: "Guadeloupe" },
+        { key: "GTM", name: "Guatemala" },
+        { key: "GIN", name: "Guinea" },
+        { key: "GNB", name: "Guinea-Bissau" },
+        { key: "GUY", name: "Guyana" },
+        { key: "HTI", name: "Haiti" },
+        { key: "VAT", name: "Holy See (Vatican City State)" },
+        { key: "HND", name: "Honduras" },
+        { key: "HKG", name: "Hong Kong" },
+        { key: "HUN", name: "Hungary" },
+        { key: "ISL", name: "Iceland" },
+        { key: "IND", name: "India" },
+        { key: "IDN", name: "Indonesia" },
+        { key: "IRN", name: "Iran" },
+        { key: "IRQ", name: "Iraq" },
+        { key: "IRL", name: "Ireland" },
+        { key: "IMN", name: "Isle of Man" },
+        { key: "ISR", name: "Israel" },
+        { key: "ITA", name: "Italy" },
+        { key: "JAM", name: "Jamaica" },
+        { key: "JPN", name: "Japan" },
+        { key: "JOR", name: "Jordan" },
+        { key: "KAZ", name: "Kazakhstan" },
+        { key: "KEN", name: "Kenya" },
+        { key: "KWT", name: "Kuwait" },
+        { key: "KGZ", name: "Kyrgyzstan" },
+        { key: "LAO", name: "Lao People's Democratic Republic" },
+        { key: "LVA", name: "Latvia" },
+        { key: "LBN", name: "Lebanon" },
+        { key: "LBR", name: "Liberia" },
+        { key: "LBY", name: "Libyan Arab Jamahiriya" },
+        { key: "LIE", name: "Liechtenstein" },
+        { key: "LTU", name: "Lithuania" },
+        { key: "LUX", name: "Luxembourg" },
+        { key: "MAC", name: "Macao" },
+        { key: "MKD", name: "Macedonia" },
+        { key: "MDG", name: "Madagascar" },
+        { key: "MYS", name: "Malaysia" },
+        { key: "MDV", name: "Maldives" },
+        { key: "MLI", name: "Mali" },
+        { key: "MLT", name: "Malta" },
+        { key: "MTQ", name: "Martinique" },
+        { key: "MRT", name: "Mauritania" },
+        { key: "MUS", name: "Mauritius" },
+        { key: "MYT", name: "Mayotte" },
+        { key: "MEX", name: "Mexico" },
+        { key: "MDA", name: "Moldova Republic of" },
+        { key: "MCO", name: "Monaco" },
+        { key: "MNG", name: "Mongolia" },
+        { key: "MNE", name: "Montenegro" },
+        { key: "MSR", name: "Montserrat" },
+        { key: "MAR", name: "Morocco" },
+        { key: "MOZ", name: "Mozambique" },
+        { key: "null", name: "MS Zaandam" },
+        { key: "MMR", name: "Myanmar" },
+        { key: "NAM", name: "Namibia" },
+        { key: "NPL", name: "Nepal" },
+        { key: "NLD", name: "Netherlands" },
+        { key: "NCL", name: "New Caledonia" },
+        { key: "NZL", name: "New Zealand" },
+        { key: "NIC", name: "Nicaragua" },
+        { key: "NER", name: "Niger" },
+        { key: "NGA", name: "Nigeria" },
+        { key: "NOR", name: "Norway" },
+        { key: "OMN", name: "Oman" },
+        { key: "PAK", name: "Pakistan" },
+        { key: "PSE", name: "Palestinian Territory Occupied" },
+        { key: "PAN", name: "Panama" },
+        { key: "PNG", name: "Papua New Guinea" },
+        { key: "PRY", name: "Paraguay" },
+        { key: "PER", name: "Peru" },
+        { key: "PHL", name: "Philippines" },
+        { key: "POL", name: "Poland" },
+        { key: "PRT", name: "Portugal" },
+        { key: "QAT", name: "Qatar" },
+        { key: "REU", name: "Réunion" },
+        { key: "ROU", name: "Romania" },
+        { key: "RUS", name: "Russia" },
+        { key: "RWA", name: "Rwanda" },
+        { key: "KOR", name: "S. Korea" },
+        { key: "KNA", name: "Saint Kitts and Nevis" },
+        { key: "LCA", name: "Saint Lucia" },
+        { key: "MAF", name: "Saint Martin" },
+        { key: "VCT", name: "Saint Vincent and the Grenadines" },
+        { key: "SMR", name: "San Marino" },
+        { key: "SAU", name: "Saudi Arabia" },
+        { key: "SEN", name: "Senegal" },
+        { key: "SRB", name: "Serbia" },
+        { key: "SYC", name: "Seychelles" },
+        { key: "SGP", name: "Singapore" },
+        { key: "SXM", name: "Sint Maarten" },
+        { key: "SVK", name: "Slovakia" },
+        { key: "SVN", name: "Slovenia" },
+        { key: "SOM", name: "Somalia" },
+        { key: "ZAF", name: "South Africa" },
+        { key: "ESP", name: "Spain" },
+        { key: "LKA", name: "Sri Lanka" },
+        { key: "BLM", name: "St. Barth" },
+        { key: "SDN", name: "Sudan" },
+        { key: "SUR", name: "Suriname" },
+        { key: "SWZ", name: "Swaziland" },
+        { key: "SWE", name: "Sweden" },
+        { key: "CHE", name: "Switzerland" },
+        { key: "SYR", name: "Syrian Arab Republic" },
+        { key: "TWN", name: "Taiwan" },
+        { key: "TZA", name: "Tanzania United Republic of" },
+        { key: "THA", name: "Thailand" },
+        { key: "TLS", name: "Timor-Leste" },
+        { key: "TGO", name: "Togo" },
+        { key: "TTO", name: "Trinidad and Tobago" },
+        { key: "TUN", name: "Tunisia" },
+        { key: "TUR", name: "Turkey" },
+        { key: "TCA", name: "Turks and Caicos Islands" },
+        { key: "ARE", name: "UAE" },
+        { key: "UGA", name: "Uganda" },
+        { key: "GBR", name: "UK" },
+        { key: "UKR", name: "Ukraine" },
+        { key: "URY", name: "Uruguay" },
+        { key: "USA", name: "USA" },
+        { key: "UZB", name: "Uzbekistan" },
+        { key: "VEN", name: "Venezuela Bolivarian Republic of" },
+        { key: "VNM", name: "Vietnam" },
+        { key: "ZMB", name: "Zambia" },
+        { key: "ZWE", name: "Zimbabwe" }
+      ]
     };
   },
   methods: {
-    OnSubmit(e) {
-      e.preventDefault();
-      this.$emit("get-country", this.country);
-      this.country = "";
+    OnSubmit() {
+      const reCntry = this.$refs["srchInput"].value;
+      this.$emit("get-country", reCntry && reCntry !== "" ? reCntry : null);
+      this.$refs["srchInput"].value = "";
+      this.list = [];
+    },
+    cntryChng(e) {
+      if (e) {
+        this.list = this.countries.filter(ec =>
+          ec.name.toLowerCase().includes(e.toLowerCase())
+        );
+      } else {
+        this.list = [];
+        this.info = undefined;
+      }
+    },
+    itemClick(name) {
+      this.list = [];
+      this.OnSubmit(name);
     }
   }
 };
 </script>
+
+<style>
+.lviewChild {
+  height: 35vh !important;
+}
+.listView {
+  height: auto !important;
+  max-height: 35vh !important;
+  overflow-y: auto;
+  position: absolute;
+  z-index: 10;
+  width: 90%;
+  margin: 0 auto;
+  border: 1px solid #c0c0c038;
+  border-radius: 5px;
+  -webkit-box-shadow: 0px 8px 10px 0px silver;
+  box-shadow: 0px 8px 10px 0px silver;
+  top: 69px;
+}
+.hvrItem:hover {
+  background: silver;
+}
+.cstmBtn {
+  width: 25% !important;
+  height: 35px !important;
+}
+.cstmRow {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+</style>
