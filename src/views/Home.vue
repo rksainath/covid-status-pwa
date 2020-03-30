@@ -33,7 +33,7 @@ import CovidInfo from "../components/CovidInfo";
 
 export default {
   name: "Home",
-  components: { CovidSelect,CovidInfo },
+  components: { CovidSelect, CovidInfo },
   data() {
     return {
       info: null
@@ -41,12 +41,19 @@ export default {
   },
   methods: {
     async getCountryStatus(country) {
-      const res = await fetch(`https://corona.lmao.ninja/countries/${country}`);
-
-      if (res == 404) {
-        this.showAlert();
+      if (country && country !== '') {
+        const res = await fetch(
+          `https://corona.lmao.ninja/countries/${country}`
+        );
+        if (res.status == 404) {
+          this.info = null;
+          this.showAlert();
+        } else {
+          this.info = await res.json();
+        }
+      } else {
+        this.info = null;
       }
-      this.info = await res.json();
     },
     showAlert() {
       return this.$ionic.alertController
