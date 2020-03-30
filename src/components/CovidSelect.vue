@@ -464,9 +464,13 @@ export default {
     };
   },
   methods: {
-    OnSubmit() {
-      const reCntry = this.$refs["srchInput"].value;
-      this.$emit("get-country", reCntry && reCntry !== "" ? reCntry : null);
+    OnSubmit(name) {
+      if (name && name !== "") {
+        this.$emit("get-country", name && name !== "" ? name : null);
+      } else {
+        const reCntry = this.$refs["srchInput"].value;
+        this.$emit("get-country", reCntry && reCntry !== "" ? reCntry : null);
+      }
       this.$refs["srchInput"].value = "";
       this.list = [];
     },

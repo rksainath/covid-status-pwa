@@ -59,7 +59,7 @@ export default {
       return this.$ionic.alertController
         .create({
           header: "Not Valid",
-          message: "Please enter a valid country code",
+          message: "Please enter a valid country name",
           buttons: ["OK"]
         })
         .then(a => a.present());
