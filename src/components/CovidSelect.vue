@@ -15,7 +15,7 @@
             class="hvrItem"
             v-for="cntry in list"
             v-bind:key="cntry.id"
-            v-on:click="itemClick(cntry.name);"
+            v-on:click="itemClick(cntry.key);"
           >{{cntry.name}}</ion-item>
         </ion-content>
       </ion-card>
