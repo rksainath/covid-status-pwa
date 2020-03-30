@@ -1,6 +1,6 @@
 <template>
   <ion-grid>
-    <div>
+    <div v-if="isSrchShow">
       <ion-toolbar>
         <!-- :value="country" -->
         <ion-searchbar
@@ -35,6 +35,15 @@
           color="medium"
         >Clear</ion-button>
       </div>
+    </div>
+    <div class="cstmRow" v-if="!isSrchShow">
+      <ion-button
+        shape="round"
+        class="cstmBtn"
+        size="default"
+        v-on:click="OnSubmit(null, 'reset')"
+        color="primary"
+      >Try New Country</ion-button>
     </div>
     <!-- <form @submit="OnSubmit">
       <ion-select
@@ -249,14 +258,15 @@
     </form>-->
   </ion-grid>
 </template>
-
 <script>
+
 export default {
   name: "CovidSelect",
   data() {
     return {
       country: "",
       list: [],
+      isSrchShow: true,
       srchVal: "",
       countries: [
         { key: "AFG", name: "Afghanistan" },
@@ -464,14 +474,22 @@ export default {
     };
   },
   methods: {
-    OnSubmit(name) {
-      if (name && name !== "") {
-        this.$emit("get-country", name && name !== "" ? name : null);
+    OnSubmit(name, type) {
+      if (type !== "reset") {
+        if (name && name !== "") {
+          this.$emit("get-country", name && name !== "" ? name : null);
+          this.isSrchShow = false;
+        } else {
+          const reCntry = this.$refs["srchInput"].value;
+          if (reCntry && reCntry !== "") {
+            this.isSrchShow = false;
+          }
+          this.$emit("get-country", reCntry && reCntry !== "" ? reCntry : null);
+        }
       } else {
-        const reCntry = this.$refs["srchInput"].value;
-        this.$emit("get-country", reCntry && reCntry !== "" ? reCntry : null);
+        this.isSrchShow = true;
+        this.$emit("get-country", null);
       }
-      this.$refs["srchInput"].value = "";
       this.list = [];
     },
     cntryChng(e) {
@@ -514,7 +532,8 @@ export default {
   background: silver;
 }
 .cstmBtn {
-  width: 25% !important;
+  min-width: 25% !important;
+  max-width: 45% !important;
   height: 35px !important;
 }
 .cstmRow {
