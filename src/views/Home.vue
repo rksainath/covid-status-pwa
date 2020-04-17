@@ -43,7 +43,7 @@ export default {
     async getCountryStatus(country) {
       if (country && country !== '') {
         const res = await fetch(
-          `https://corona.lmao.ninja/countries/${country}`
+          `https://corona.lmao.ninja/v2/countries/${country}`
         );
         if (res.status == 404) {
           this.info = null;
